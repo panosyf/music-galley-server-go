@@ -37,6 +37,7 @@ func Artist(w http.ResponseWriter, r *http.Request) {
 
 func CheckPost(w http.ResponseWriter, r *http.Request) bool {
 	if r.Method != http.MethodPost {
+		w.Header().Set("Allow", http.MethodPost)
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return false
 	}
