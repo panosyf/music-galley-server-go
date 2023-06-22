@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"fmt"
+	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 )
@@ -25,12 +27,30 @@ func CheckId(w http.ResponseWriter, r *http.Request) (int, error) {
 	return id, nil
 }
 
+func CheckParsedFile(w http.ResponseWriter, filePath string) error {
+	ts, err := template.ParseFiles(filePath)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return err
+	}
+	err = ts.Execute(w, nil)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return err
+	}
+	return nil
+}
+
 func homepage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
-
+	if CheckParsedFile(w, "./ui/html/pages/homepage.tmpl.html") != nil {
+		return
+	}
 	w.Write([]byte("homepage"))
 }
 
