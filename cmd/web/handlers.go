@@ -27,14 +27,14 @@ func CheckId(w http.ResponseWriter, r *http.Request) (int, error) {
 	return id, nil
 }
 
-func CheckParsedFile(w http.ResponseWriter, filePath string) error {
-	ts, err := template.ParseFiles(filePath)
+func CheckParsedFile(w http.ResponseWriter, files []string) error {
+	ts, err := template.ParseFiles(files...)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return err
 	}
-	err = ts.Execute(w, nil)
+	err = ts.ExecuteTemplate(w, "base", nil)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -44,11 +44,14 @@ func CheckParsedFile(w http.ResponseWriter, filePath string) error {
 }
 
 func homepage(w http.ResponseWriter, r *http.Request) {
+	files := []string{
+		"./ui/html/base.tmpl.html",
+		"./ui/html/pages/homepage.tmpl.html"}
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
-	if CheckParsedFile(w, "./ui/html/pages/homepage.tmpl.html") != nil {
+	if CheckParsedFile(w, files) != nil {
 		return
 	}
 	w.Write([]byte("homepage"))
