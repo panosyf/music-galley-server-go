@@ -6,8 +6,11 @@ import (
 )
 
 func main() {
-
 	mux := http.NewServeMux()
+
+	fileServer := http.FileServer(http.Dir("./ui/static/"))
+	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+
 	mux.HandleFunc("/", homepage)
 	mux.HandleFunc("/artist", artist)
 	mux.HandleFunc("/artist/create", artistCreate)

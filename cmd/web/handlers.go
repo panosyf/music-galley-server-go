@@ -46,7 +46,8 @@ func CheckParsedFile(w http.ResponseWriter, files []string) error {
 func homepage(w http.ResponseWriter, r *http.Request) {
 	files := []string{
 		"./ui/html/base.tmpl.html",
-		"./ui/html/pages/homepage.tmpl.html"}
+		"./ui/html/pages/homepage.tmpl.html",
+		"./ui/html/partials/nav.tmpl.html"}
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
