@@ -9,7 +9,7 @@ import (
 	"strconv"
 )
 
-func CheckPost(w http.ResponseWriter, r *http.Request) error {
+func (app *application) CheckPost(w http.ResponseWriter, r *http.Request) error {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -18,7 +18,7 @@ func CheckPost(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func CheckId(w http.ResponseWriter, r *http.Request) (int, error) {
+func (app *application) CheckId(w http.ResponseWriter, r *http.Request) (int, error) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		http.NotFound(w, r)
@@ -27,10 +27,10 @@ func CheckId(w http.ResponseWriter, r *http.Request) (int, error) {
 	return id, nil
 }
 
-func CheckParsedFile(w http.ResponseWriter, files []string) error {
+func (app *application) CheckParsedFile(w http.ResponseWriter, files []string) error {
 	ts, err := template.ParseFiles(files...)
 	if err != nil {
-		log.Print(err.Error())
+		app.errorLog.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return err
 	}
@@ -43,61 +43,63 @@ func CheckParsedFile(w http.ResponseWriter, files []string) error {
 	return nil
 }
 
-func homepage(w http.ResponseWriter, r *http.Request) {
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/pages/homepage.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html"}
+func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
 	}
-	if CheckParsedFile(w, files) != nil {
+
+	files := []string{
+		"./ui/html/base.tmpl.html",
+		"./ui/html/pages/homepage.tmpl.html",
+		"./ui/html/partials/nav.tmpl.html"}
+
+	if app.CheckParsedFile(w, files) != nil {
 		return
 	}
 	w.Write([]byte("homepage"))
 }
 
-func artist(w http.ResponseWriter, r *http.Request) {
-	id, err := CheckId(w, r)
+func (app *application) artist(w http.ResponseWriter, r *http.Request) {
+	id, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
 	fmt.Fprintf(w, "artist/%d\n", id)
 }
 
-func artistCreate(w http.ResponseWriter, r *http.Request) {
-	if CheckPost(w, r) != nil {
+func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
+	if app.CheckPost(w, r) != nil {
 		return
 	}
 	fmt.Fprintf(w, "create artist\n")
 }
 
-func album(w http.ResponseWriter, r *http.Request) {
-	id, err := CheckId(w, r)
+func (app *application) album(w http.ResponseWriter, r *http.Request) {
+	id, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
 	fmt.Fprintf(w, "album/%d\n", id)
 }
 
-func albumCreate(w http.ResponseWriter, r *http.Request) {
-	if CheckPost(w, r) != nil {
+func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
+	if app.CheckPost(w, r) != nil {
 		return
 	}
 	fmt.Fprintf(w, "create album")
 }
 
-func track(w http.ResponseWriter, r *http.Request) {
-	id, err := CheckId(w, r)
+func (app *application) track(w http.ResponseWriter, r *http.Request) {
+	id, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
 	fmt.Fprintf(w, "track/%d\n", id)
 }
 
-func trackCreate(w http.ResponseWriter, r *http.Request) {
-	if CheckPost(w, r) != nil {
+func (app *application) trackCreate(w http.ResponseWriter, r *http.Request) {
+	if app.CheckPost(w, r) != nil {
 		return
 	}
 	fmt.Fprintf(w, "create track")
