@@ -1,44 +1,9 @@
 package main
 
 import (
-	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
-	"strconv"
 )
-
-func (app *application) CheckPost(w http.ResponseWriter, r *http.Request) error {
-	if r.Method != http.MethodPost {
-		w.Header().Set("Allow", http.MethodPost)
-		app.clientError(w, http.StatusMethodNotAllowed)
-		return errors.New("not POST method")
-	}
-	return nil
-}
-
-func (app *application) CheckId(w http.ResponseWriter, r *http.Request) (int, error) {
-	id, err := strconv.Atoi(r.URL.Query().Get("id"))
-	if err != nil || id < 1 {
-		app.notFound(w)
-		return id, errors.New("id not applicable")
-	}
-	return id, nil
-}
-
-func (app *application) CheckParsedFile(w http.ResponseWriter, files []string) error {
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return err
-	}
-	err = ts.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		app.serverError(w, err)
-		return err
-	}
-	return nil
-}
 
 func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
@@ -58,7 +23,7 @@ func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) artist(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, r)
+	id, err := app.CheckId(w, *r)
 	if err != nil {
 		return
 	}
@@ -73,7 +38,7 @@ func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) album(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, r)
+	id, err := app.CheckId(w, *r)
 	if err != nil {
 		return
 	}
@@ -88,7 +53,7 @@ func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) track(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, r)
+	id, err := app.CheckId(w, *r)
 	if err != nil {
 		return
 	}
