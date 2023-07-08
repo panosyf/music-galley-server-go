@@ -33,7 +33,7 @@ func (app *application) CheckPost(w http.ResponseWriter, r *http.Request) error 
 	return nil
 }
 
-func (app *application) CheckId(w http.ResponseWriter, r http.Request) (int, error) {
+func (app *application) CheckId(w http.ResponseWriter, r *http.Request) (int, error) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 	if err != nil || id < 1 {
 		app.notFound(w)

@@ -11,23 +11,27 @@ func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/pages/homepage.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html"}
+	// files := []string{
+	// 	"./ui/html/base.tmpl.html",
+	// 	"./ui/html/pages/homepage.tmpl.html",
+	// 	"./ui/html/partials/nav.tmpl.html"}
 
-	if app.CheckParsedFile(w, files) != nil {
-		return
-	}
+	// if app.CheckParsedFile(w, files) != nil {
+	// 	return
+	// }
 	w.Write([]byte("homepage"))
 }
 
 func (app *application) artist(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, *r)
+	w.Write([]byte("artist"))
+}
+
+func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
+	id, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
-	fmt.Fprintf(w, "artist/%d\n", id)
+	fmt.Fprintf(w, "artist/view/%d\n", id)
 }
 
 func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
@@ -38,11 +42,15 @@ func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) album(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, *r)
+	w.Write([]byte("album"))
+}
+
+func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
+	id, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
-	fmt.Fprintf(w, "album/%d\n", id)
+	fmt.Fprintf(w, "album/view/%d\n", id)
 }
 
 func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
@@ -53,11 +61,15 @@ func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) track(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, *r)
+	w.Write([]byte("track"))
+}
+
+func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
+	id, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
-	fmt.Fprintf(w, "track/%d\n", id)
+	fmt.Fprintf(w, "track/view/%d\n", id)
 }
 
 func (app *application) trackCreate(w http.ResponseWriter, r *http.Request) {
