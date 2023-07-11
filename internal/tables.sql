@@ -35,3 +35,7 @@ CREATE TABLE tracks(
 );
 
 CREATE INDEX idx_tracks_created ON tracks(created);
+
+CREATE USER 'admin'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON musicgallery.* TO 'admin'@'localhost';
+ALTER USER 'admin'@'localhost' IDENTIFIED BY 'admin';
