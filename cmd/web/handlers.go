@@ -38,7 +38,18 @@ func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
 	if app.CheckPost(w, r) != nil {
 		return
 	}
-	fmt.Fprintf(w, "create artist\n")
+
+	name := "MIW"
+	genre := "Metalcore"
+	formation := "2004-6-12"
+	expires := 365
+
+	id, err := app.artists.InsertArtist(name, genre, formation, expires)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/artist/view?id=%d", id), http.StatusSeeOther)
 }
 
 func (app *application) album(w http.ResponseWriter, r *http.Request) {
@@ -88,5 +99,18 @@ func (app *application) trackCreate(w http.ResponseWriter, r *http.Request) {
 	if app.CheckPost(w, r) != nil {
 		return
 	}
-	fmt.Fprintf(w, "create track")
+
+	artistId := 1
+	albumId := 1
+	title := "Surfacing"
+	genre := "Nu Metal"
+	duration := 200
+	expires := 365
+
+	id, err := app.tracks.InsertTrack(artistId, albumId, title, genre, duration, expires)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/track/view?id=%d", id), http.StatusSeeOther)
 }
