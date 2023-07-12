@@ -57,7 +57,19 @@ func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
 	if app.CheckPost(w, r) != nil {
 		return
 	}
-	fmt.Fprintf(w, "create album")
+
+	artistId := 1
+	title := "WANYK"
+	genre := "Metal"
+	released := "2020-9-7"
+	expires := 365
+
+	id, err := app.albums.InsertAlbum(artistId, title, genre, released, expires)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+	http.Redirect(w, r, fmt.Sprintf("/album/view?id=%d", id), http.StatusSeeOther)
 }
 
 func (app *application) track(w http.ResponseWriter, r *http.Request) {

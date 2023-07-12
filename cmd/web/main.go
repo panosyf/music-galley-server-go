@@ -8,11 +8,15 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/panosyf/music-gallery-server-go/internal/models"
 )
 
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	artists  *models.ArtistModel
+	albums   *models.AlbumModel
+	tracks   *models.TrackModel
 }
 
 func main() {
@@ -33,6 +37,9 @@ func main() {
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
+		artists:  &models.ArtistModel{DB: db},
+		albums:   &models.AlbumModel{DB: db},
+		tracks:   &models.TrackModel{DB: db},
 	}
 
 	srv := http.Server{
