@@ -1,8 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
+
+	"github.com/panosyf/music-gallery-server-go/internal/models"
 )
 
 func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
@@ -27,11 +30,23 @@ func (app *application) artist(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, r)
+	artist_id, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
-	fmt.Fprintf(w, "artist/view/%d\n", id)
+
+	artist, err := app.artists.GetArtist(artist_id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+			return
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	fmt.Fprintf(w, "%+v", artist)
 }
 
 func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
@@ -57,11 +72,22 @@ func (app *application) album(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, r)
+	albumId, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
-	fmt.Fprintf(w, "album/view/%d\n", id)
+
+	album, err := app.albums.GetAlbum(albumId)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+			return
+		} else {
+			app.serverError(w, err)
+		}
+	}
+
+	fmt.Fprintf(w, "%+v\n", album)
 }
 
 func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
@@ -88,11 +114,23 @@ func (app *application) track(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
-	id, err := app.CheckId(w, r)
+	trackId, err := app.CheckId(w, r)
 	if err != nil {
 		return
 	}
-	fmt.Fprintf(w, "track/view/%d\n", id)
+
+	track, err := app.tracks.GetTrack(trackId)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+			return
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	fmt.Fprintf(w, "%+v\n", track)
 }
 
 func (app *application) trackCreate(w http.ResponseWriter, r *http.Request) {

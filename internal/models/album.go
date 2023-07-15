@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -36,8 +37,24 @@ func (m *AlbumModel) InsertAlbum(artistId int, title string, genre string, relea
 	return (int)(id), nil
 }
 
-func (m *AlbumModel) GetAlbum(id int) (*Album, error) {
-	return nil, nil
+func (m *AlbumModel) GetAlbum(albumId int) (*Album, error) {
+	stmt := `SELECT artist_id, title, genre, released, expires FROM albums
+	WHERE expires > UTC_TIMESTAMP() AND album_id = ?`
+
+	row := m.DB.QueryRow(stmt, albumId)
+
+	a := &Album{}
+
+	err := row.Scan(&a.ArtistId, &a.Title, &a.Genre, &a.Released, &a.Expires)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	return a, nil
 }
 
 func (m *AlbumModel) LatestAlbums() ([]*AlbumModel, error) {

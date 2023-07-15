@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -35,8 +36,24 @@ func (m *ArtistModel) InsertArtist(name string, genre string, formation string, 
 	return (int)(id), nil
 }
 
-func (m *ArtistModel) GetArtist(id int) (*Artist, error) {
-	return nil, nil
+func (m *ArtistModel) GetArtist(artistId int) (*Artist, error) {
+	stmt := `SELECT artist_id, name, genre, formation, expires FROM artists
+	WHERE expires > UTC_TIMESTAMP() AND artist_id = ?`
+
+	row := m.DB.QueryRow(stmt, artistId)
+
+	a := &Artist{}
+
+	err := row.Scan(&a.ArtistId, &a.Name, &a.Genre, &a.Formation, &a.Expires)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	return a, nil
 }
 
 func (m *ArtistModel) LatestArtists() ([]*ArtistModel, error) {

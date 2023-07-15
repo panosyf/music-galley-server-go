@@ -2,6 +2,7 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -37,8 +38,24 @@ func (m *TrackModel) InsertTrack(artistId int, albumId int, title string, genre 
 	return (int)(id), nil
 }
 
-func (m *TrackModel) GetTrack(id int) (*Track, error) {
-	return nil, nil
+func (m *TrackModel) GetTrack(trackId int) (*Track, error) {
+	stmt := `SELECT artist_id, album_id, title, genre, duration, created, expires FROM tracks
+	WHERE expires > UTC_TIMESTAMP() AND artist_id = ?`
+
+	row := m.DB.QueryRow(stmt, trackId)
+
+	t := &Track{}
+
+	err := row.Scan(&t.ArtistId, &t.AlbumId, &t.Title, &t.Genre, &t.Duration, &t.Created, &t.Expires)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrNoRecord
+		} else {
+			return nil, err
+		}
+	}
+
+	return t, err
 }
 
 func (m *TrackModel) LatestTracks() ([]*TrackModel, error) {
