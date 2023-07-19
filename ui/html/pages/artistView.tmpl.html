@@ -1,0 +1,14 @@
+{{ define "title"}} Artist #{{.ArtistId}}{{end}} {{define "main"}}
+<div class="artist">
+    <div class="metadata">
+        <strong>{{.Name}}</strong>
+        <span>{{.ArtistId}}</span>
+    </div>
+    <pre><code>Genre: {{.Genre}}</code></pre>
+    <pre><code>Formation: {{.Formation}}</code></pre>
+    <div class="metadata">
+        <time>Created: {{.Created}}</time>
+        <time>Expires: {{.Expires}}</time>
+    </div>
+</div>
+{{end}}

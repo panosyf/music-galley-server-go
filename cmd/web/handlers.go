@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"text/template"
 
 	"github.com/panosyf/music-gallery-server-go/internal/models"
 )
@@ -54,6 +55,22 @@ func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	files := []string{
+		"./ui/html/base.tmpl.html",
+		"./ui/html/partials/nav.tmpl.html",
+		"./ui/html/pages/artistView.tmpl.html",
+	}
+
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = ts.ExecuteTemplate(w, "base", artist)
+	if err != nil {
+		app.serverError(w, err)
+	}
 	fmt.Fprintf(w, "%+v", artist)
 }
 
