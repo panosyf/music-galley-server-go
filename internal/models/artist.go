@@ -56,6 +56,31 @@ func (m *ArtistModel) GetArtist(artistId int) (*Artist, error) {
 	return a, nil
 }
 
-func (m *ArtistModel) LatestArtists() ([]*ArtistModel, error) {
-	return nil, nil
+func (m *ArtistModel) LatestArtists() ([]*Artist, error) {
+	stmt := `SELECT artist_id, name, genre, formation, expires FROM artists
+	WHERE expires > UTC_TIMESTAMP ORDER BY artist_id DESC LIMIT 10`
+
+	rows, err := m.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	artists := []*Artist{}
+
+	for rows.Next() {
+		a := &Artist{}
+		err := rows.Scan(&a.ArtistId, &a.Name, &a.Genre, &a.Formation, &a.Expires)
+		if err != nil {
+			return nil, err
+		}
+		artists = append(artists, a)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return artists, nil
 }

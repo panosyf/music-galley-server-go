@@ -14,19 +14,27 @@ func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// files := []string{
-	// 	"./ui/html/base.tmpl.html",
-	// 	"./ui/html/pages/homepage.tmpl.html",
-	// 	"./ui/html/partials/nav.tmpl.html"}
+	files := []string{
+		"./ui/html/base.tmpl.html",
+		"./ui/html/pages/homepage.tmpl.html",
+		"./ui/html/partials/nav.tmpl.html"}
 
-	// if app.CheckParsedFile(w, files) != nil {
-	// 	return
-	// }
+	if app.CheckParsedFile(w, files) != nil {
+		return
+	}
 	w.Write([]byte("homepage"))
 }
 
 func (app *application) artist(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("artist"))
+	artists, err := app.artists.LatestArtists()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	for _, artist := range artists {
+		fmt.Fprintf(w, "%+v\n", artist)
+	}
 }
 
 func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
@@ -68,7 +76,15 @@ func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) album(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("album"))
+	albums, err := app.albums.LatestAlbums()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	for _, album := range albums {
+		fmt.Fprintf(w, "%+v\n", album)
+	}
 }
 
 func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
@@ -110,7 +126,15 @@ func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) track(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("track"))
+	tracks, err := app.tracks.LatestTracks()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	for _, track := range tracks {
+		fmt.Fprintf(w, "%+v\n", track)
+	}
 }
 
 func (app *application) trackView(w http.ResponseWriter, r *http.Request) {

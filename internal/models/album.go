@@ -38,14 +38,14 @@ func (m *AlbumModel) InsertAlbum(artistId int, title string, genre string, relea
 }
 
 func (m *AlbumModel) GetAlbum(albumId int) (*Album, error) {
-	stmt := `SELECT artist_id, title, genre, released, expires FROM albums
+	stmt := `SELECT album_id, artist_id, title, genre, released, expires FROM albums
 	WHERE expires > UTC_TIMESTAMP() AND album_id = ?`
 
 	row := m.DB.QueryRow(stmt, albumId)
 
 	a := &Album{}
 
-	err := row.Scan(&a.ArtistId, &a.Title, &a.Genre, &a.Released, &a.Expires)
+	err := row.Scan(&a.AlbumId, &a.ArtistId, &a.Title, &a.Genre, &a.Released, &a.Expires)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrNoRecord
@@ -57,6 +57,31 @@ func (m *AlbumModel) GetAlbum(albumId int) (*Album, error) {
 	return a, nil
 }
 
-func (m *AlbumModel) LatestAlbums() ([]*AlbumModel, error) {
-	return nil, nil
+func (m *AlbumModel) LatestAlbums() ([]*Album, error) {
+	stmt := `SELECT album_id, artist_id, title, genre, released, expires FROM albums
+	WHERE expires > UTC_TIMESTAMP() ORDER BY album_id DESC LIMIT 10`
+
+	rows, err := m.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	albums := []*Album{}
+
+	for rows.Next() {
+		a := &Album{}
+		err := rows.Scan(&a.AlbumId, &a.ArtistId, &a.Title, &a.Genre, &a.Released, &a.Expires)
+		if err != nil {
+			return nil, err
+		}
+		albums = append(albums, a)
+	}
+
+	if err = rows.Close(); err != nil {
+		return nil, err
+	}
+
+	return albums, nil
 }

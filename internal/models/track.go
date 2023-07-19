@@ -39,14 +39,14 @@ func (m *TrackModel) InsertTrack(artistId int, albumId int, title string, genre 
 }
 
 func (m *TrackModel) GetTrack(trackId int) (*Track, error) {
-	stmt := `SELECT artist_id, album_id, title, genre, duration, created, expires FROM tracks
+	stmt := `SELECT track_id, artist_id, album_id, title, genre, duration, created, expires FROM tracks
 	WHERE expires > UTC_TIMESTAMP() AND artist_id = ?`
 
 	row := m.DB.QueryRow(stmt, trackId)
 
 	t := &Track{}
 
-	err := row.Scan(&t.ArtistId, &t.AlbumId, &t.Title, &t.Genre, &t.Duration, &t.Created, &t.Expires)
+	err := row.Scan(&t.TrackId, &t.ArtistId, &t.AlbumId, &t.Title, &t.Genre, &t.Duration, &t.Created, &t.Expires)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrNoRecord
@@ -58,6 +58,31 @@ func (m *TrackModel) GetTrack(trackId int) (*Track, error) {
 	return t, err
 }
 
-func (m *TrackModel) LatestTracks() ([]*TrackModel, error) {
-	return nil, nil
+func (m *TrackModel) LatestTracks() ([]*Track, error) {
+	stmt := `SELECT track_id, artist_id, album_id, title, genre, duration, created, expires FROM tracks
+	WHERE expires > UTC_TIMESTAMP() ORDER BY track_id DESC LIMIT 10`
+
+	rows, err := m.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	tracks := []*Track{}
+
+	for rows.Next() {
+		t := &Track{}
+		err := rows.Scan(&t.TrackId, &t.ArtistId, &t.AlbumId, &t.Title, &t.Genre, &t.Duration, &t.Created, &t.Expires)
+		if err != nil {
+			return nil, err
+		}
+		tracks = append(tracks, t)
+	}
+
+	if err = rows.Close(); err != nil {
+		return nil, err
+	}
+
+	return tracks, nil
 }
