@@ -9,7 +9,7 @@ import (
 type Track struct {
 	TrackId  int
 	ArtistId int
-	AlbumId  int
+	AlbumId  sql.NullString
 	Title    string
 	Genre    string
 	Duration int
