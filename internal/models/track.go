@@ -21,7 +21,7 @@ type TrackModel struct {
 	DB *sql.DB
 }
 
-func (m *TrackModel) InsertTrack(artistId int, albumId int, title string, genre string, duration int, expires int) (int, error) {
+func (m *TrackModel) Insert(artistId int, albumId int, title string, genre string, duration int, expires int) (int, error) {
 	stmt := `INSERT INTO tracks (artist_id, album_id, title, genre, duration, created, expires)
 	VALUES(?, ?, ?, ?, ?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`
 
@@ -38,7 +38,7 @@ func (m *TrackModel) InsertTrack(artistId int, albumId int, title string, genre 
 	return (int)(id), nil
 }
 
-func (m *TrackModel) GetTrack(trackId int) (*Track, error) {
+func (m *TrackModel) Get(trackId int) (*Track, error) {
 	stmt := `SELECT track_id, artist_id, album_id, title, genre, duration, created, expires FROM tracks
 	WHERE expires > UTC_TIMESTAMP() AND artist_id = ?`
 
@@ -58,7 +58,7 @@ func (m *TrackModel) GetTrack(trackId int) (*Track, error) {
 	return t, err
 }
 
-func (m *TrackModel) LatestTracks() ([]*Track, error) {
+func (m *TrackModel) Latest() ([]*Track, error) {
 	stmt := `SELECT track_id, artist_id, album_id, title, genre, duration, created, expires FROM tracks
 	WHERE expires > UTC_TIMESTAMP() ORDER BY track_id DESC LIMIT 10`
 

@@ -20,7 +20,7 @@ type AlbumModel struct {
 	DB *sql.DB
 }
 
-func (m *AlbumModel) InsertAlbum(artistId int, title string, genre string, released string, expires int) (int, error) {
+func (m *AlbumModel) Insert(artistId int, title string, genre string, released string, expires int) (int, error) {
 	stmt := `INSERT INTO albums (artist_id, title, genre, released, created, expires)
 	VALUES(?, ?, ?, ?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`
 
@@ -37,7 +37,7 @@ func (m *AlbumModel) InsertAlbum(artistId int, title string, genre string, relea
 	return (int)(id), nil
 }
 
-func (m *AlbumModel) GetAlbum(albumId int) (*Album, error) {
+func (m *AlbumModel) Get(albumId int) (*Album, error) {
 	stmt := `SELECT album_id, artist_id, title, genre, released, expires FROM albums
 	WHERE expires > UTC_TIMESTAMP() AND album_id = ?`
 
@@ -57,7 +57,7 @@ func (m *AlbumModel) GetAlbum(albumId int) (*Album, error) {
 	return a, nil
 }
 
-func (m *AlbumModel) LatestAlbums() ([]*Album, error) {
+func (m *AlbumModel) Latest() ([]*Album, error) {
 	stmt := `SELECT album_id, artist_id, title, genre, released, expires FROM albums
 	WHERE expires > UTC_TIMESTAMP() ORDER BY album_id DESC LIMIT 10`
 

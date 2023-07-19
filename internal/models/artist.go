@@ -19,7 +19,7 @@ type ArtistModel struct {
 	DB *sql.DB
 }
 
-func (m *ArtistModel) InsertArtist(name string, genre string, formation string, expires int) (int, error) {
+func (m *ArtistModel) Insert(name string, genre string, formation string, expires int) (int, error) {
 	stmt := `INSERT INTO artists (name, genre, formation, created, expires)
 	VALUES(?, ?, ?, UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL ? DAY))`
 
@@ -36,7 +36,7 @@ func (m *ArtistModel) InsertArtist(name string, genre string, formation string, 
 	return (int)(id), nil
 }
 
-func (m *ArtistModel) GetArtist(artistId int) (*Artist, error) {
+func (m *ArtistModel) Get(artistId int) (*Artist, error) {
 	stmt := `SELECT artist_id, name, genre, formation, expires FROM artists
 	WHERE expires > UTC_TIMESTAMP() AND artist_id = ?`
 
@@ -56,7 +56,7 @@ func (m *ArtistModel) GetArtist(artistId int) (*Artist, error) {
 	return a, nil
 }
 
-func (m *ArtistModel) LatestArtists() ([]*Artist, error) {
+func (m *ArtistModel) Latest() ([]*Artist, error) {
 	stmt := `SELECT artist_id, name, genre, formation, expires FROM artists
 	WHERE expires > UTC_TIMESTAMP ORDER BY artist_id DESC LIMIT 10`
 
