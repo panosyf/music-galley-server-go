@@ -120,6 +120,22 @@ func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	files := []string{
+		"./ui/html/base.tmpl.html",
+		"./ui/html/partials/nav.tmpl.html",
+		"./ui/html/pages/albumView.tmpl.html",
+	}
+
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = ts.ExecuteTemplate(w, "base", album)
+	if err != nil {
+		app.serverError(w, err)
+	}
 	fmt.Fprintf(w, "%+v\n", album)
 }
 
@@ -171,6 +187,22 @@ func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	files := []string{
+		"./ui/html/base.tmpl.html",
+		"./ui/html/partials/nav.tmpl.html",
+		"./ui/html/pages/trackView.tmpl.html",
+	}
+
+	ts, err := template.ParseFiles(files...)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	err = ts.ExecuteTemplate(w, "base", track)
+	if err != nil {
+		app.serverError(w, err)
+	}
 	fmt.Fprintf(w, "%+v\n", track)
 }
 
