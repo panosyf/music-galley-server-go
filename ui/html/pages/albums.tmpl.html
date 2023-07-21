@@ -1,0 +1,26 @@
+{{ define "title" }} Albums {{ end }} {{ define "main" }}
+<h2>Latest Albums</h2>
+{{ if .Albums }}
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Artist ID</th>
+        <th>AlbumId ID</th>
+        <th>Released</th>
+        <th>Created</th>
+    </tr>
+    {{ range .Albums }}
+    <tr>
+        <td><a href="album/view?id={{.AlbumId}}">{{ .Title }}</a></td>
+        <th>{{ .Genre }}</th>
+        <th>#{{ .ArtistId }}</th>
+        <th>#{{ .AlbumId }}</th>
+        <th>{{ .Released }}</th>
+        <th>{{ .Created }}</th>
+    </tr>
+    {{ end }}
+</table>
+{{ else }}
+<p>No albums to see here... yet!</p>
+{{ end }} {{ end }}

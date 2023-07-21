@@ -1,15 +1,16 @@
-{{define "title"}}Track #{{.TrackId}}{{end}} {{define "main"}}
+{{ define "title" }} Track #{{ .Track.TrackId }} {{ end }} {{ define "main" }}
+{{ with .Track }}
 <div class="entry">
     <div class="metadata">
-        <strong>{{.Title}}</strong>
-        <span>{{.ArtistId}}</span>
-        <span>{{.AlbumId}}</span>
+        <strong>{{ .Title }}</strong>
+        <span>{{ .ArtistId }}</span>
+        <span>{{ .AlbumId }}</span>
     </div>
-    <pre><code>Genre: {{.Genre}}</code></pre>
-    <pre><code>Duration: {{.Duration}}</code></pre>
+    <pre><code>Genre: {{ .Genre }}</code></pre>
+    <pre><code>Duration: {{ .Duration }}</code></pre>
     <div class="metadata">
-        <time>Created: {{.Created}}</time>
-        <time>Expires: {{.Expires}}</time>
+        <time>Created: {{ .Created }}</time>
+        <time>Expires: {{ .Expires }}</time>
     </div>
 </div>
-{{end}}
+{{ end }} {{ end }}

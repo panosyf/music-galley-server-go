@@ -1,14 +1,15 @@
-{{define "title"}}Album #{{.AlbumId}}{{end}} {{define "main"}}
+{{ define "title" }} Album #{{ .Album.AlbumId }} {{ end }} {{ define "main" }}
+{{ with .Album }}
 <div class="entry">
     <div class="metadata">
-        <strong>{{.Title}}</strong>
-        <span>{{.ArtistId}}</span>
+        <strong>{{ .Title }}</strong>
+        <span>{{ .ArtistId }}</span>
     </div>
-    <pre><code>Genre: {{.Genre}}</code></pre>
-    <pre><code>Released: {{.Released}}</code></pre>
+    <pre><code>Genre: {{ .Genre }}</code></pre>
+    <pre><code>Released: {{ .Released }}</code></pre>
     <div class="metadata">
-        <time>Created: {{.Created}}</time>
-        <time>Expires: {{.Expires}}</time>
+        <time>Created: {{ .Created }}</time>
+        <time>Expires: {{ .Expires }}</time>
     </div>
 </div>
-{{end}}
+{{ end }} {{ end }}

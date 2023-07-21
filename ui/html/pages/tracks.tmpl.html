@@ -1,0 +1,32 @@
+{{ define "title" }} Tracks {{ end }} {{ define "main" }}
+<h2>Latest Tracks</h2>
+{{ if .Tracks }}
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Artist ID</th>
+        <th>AlbumId ID</th>
+        <th>Track ID</th>
+        <th>Duration</th>
+        <th>Created</th>
+    </tr>
+    {{ range .Tracks }}
+    <tr>
+        <td><a href="track/view?id={{.TrackId}}">{{ .Title }}</a></td>
+        <th>{{ .Genre }}</th>
+        <th>#{{ .ArtistId }}</th>
+        {{if .AlbumId.Valid}}
+        <th>#{{ .AlbumId.String }}</th>
+        {{ else }}
+        <th>Single</th>
+        {{ end }}
+        <th>#{{ .TrackId }}</th>
+        <th>{{ .Duration }}</th>
+        <th>{{ .Created }}</th>
+    </tr>
+    {{ end }}
+</table>
+{{ else }}
+<p>No tracks to see here... yet!</p>
+{{ end }} {{ end }}

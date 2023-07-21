@@ -1,0 +1,24 @@
+{{ define "title" }} Artists {{ end }} {{ define "main" }}
+<h2>Latest Artists</h2>
+{{ if .Artists }}
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Genre</th>
+        <th>Artist ID</th>
+        <th>Formation</th>
+        <th>Created</th>
+    </tr>
+    {{ range .Artists }}
+    <tr>
+        <td><a href="artist/view?id={{.ArtistId}}">{{ .Name }}</a></td>
+        <th>{{ .Genre }}</th>
+        <th>#{{ .ArtistId }}</th>
+        <th>{{ .Formation }}</th>
+        <th>{{ .Created }}</th>
+    </tr>
+    {{ end }}
+</table>
+{{ else }}
+<p>No artists to see here... yet!</p>
+{{ end }} {{ end }}
