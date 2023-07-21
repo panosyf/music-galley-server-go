@@ -26,8 +26,8 @@ func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("homepage"))
 }
 
-func (app *application) artist(w http.ResponseWriter, r *http.Request) {
-	artists, err := app.artists.Latest()
+func (app *application) artists(w http.ResponseWriter, r *http.Request) {
+	artists, err := app.artistModel.Latest()
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -61,7 +61,7 @@ func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	artist, err := app.artists.Get(artist_id)
+	artist, err := app.artistModel.Get(artist_id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.notFound(w)
@@ -105,7 +105,7 @@ func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
 	formation := "2004-6-12"
 	expires := 365
 
-	id, err := app.artists.Insert(name, genre, formation, expires)
+	id, err := app.artistModel.Insert(name, genre, formation, expires)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -113,8 +113,8 @@ func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/artist/view?id=%d", id), http.StatusSeeOther)
 }
 
-func (app *application) album(w http.ResponseWriter, r *http.Request) {
-	albums, err := app.albums.Latest()
+func (app *application) albums(w http.ResponseWriter, r *http.Request) {
+	albums, err := app.albumModel.Latest()
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -148,7 +148,7 @@ func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	album, err := app.albums.Get(albumId)
+	album, err := app.albumModel.Get(albumId)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.notFound(w)
@@ -192,7 +192,7 @@ func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
 	released := "2020-9-7"
 	expires := 365
 
-	id, err := app.albums.Insert(artistId, title, genre, released, expires)
+	id, err := app.albumModel.Insert(artistId, title, genre, released, expires)
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -200,8 +200,8 @@ func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, fmt.Sprintf("/album/view?id=%d", id), http.StatusSeeOther)
 }
 
-func (app *application) track(w http.ResponseWriter, r *http.Request) {
-	tracks, err := app.tracks.Latest()
+func (app *application) tracks(w http.ResponseWriter, r *http.Request) {
+	tracks, err := app.trackModel.Latest()
 	if err != nil {
 		app.serverError(w, err)
 		return
@@ -235,7 +235,7 @@ func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	track, err := app.tracks.Get(trackId)
+	track, err := app.trackModel.Get(trackId)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			app.notFound(w)
@@ -281,7 +281,7 @@ func (app *application) trackCreate(w http.ResponseWriter, r *http.Request) {
 	duration := 200
 	expires := 365
 
-	id, err := app.tracks.Insert(artistId, albumId, title, genre, duration, expires)
+	id, err := app.trackModel.Insert(artistId, albumId, title, genre, duration, expires)
 	if err != nil {
 		app.serverError(w, err)
 		return

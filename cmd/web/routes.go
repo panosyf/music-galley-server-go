@@ -13,15 +13,15 @@ func (app *application) routes() *http.ServeMux {
 
 	mux.HandleFunc("/", app.homepage)
 
-	mux.HandleFunc("/artist", app.artist)
+	mux.HandleFunc("/artists", app.artists)
 	mux.HandleFunc("/artist/view", app.artistView)
 	mux.HandleFunc("/artist/create", app.artistCreate)
 
-	mux.HandleFunc("/album", app.album)
+	mux.HandleFunc("/albums", app.albums)
 	mux.HandleFunc("/album/view", app.albumView)
 	mux.HandleFunc("/album/create", app.albumCreate)
 
-	mux.HandleFunc("/track", app.track)
+	mux.HandleFunc("/tracks", app.tracks)
 	mux.HandleFunc("/track/view", app.trackView)
 	mux.HandleFunc("/track/create", app.trackCreate)
 

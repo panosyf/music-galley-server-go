@@ -12,11 +12,11 @@ import (
 )
 
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	artists  *models.ArtistModel
-	albums   *models.AlbumModel
-	tracks   *models.TrackModel
+	errorLog    *log.Logger
+	infoLog     *log.Logger
+	artistModel *models.ArtistModel
+	albumModel  *models.AlbumModel
+	trackModel  *models.TrackModel
 }
 
 func main() {
@@ -35,11 +35,11 @@ func main() {
 	defer db.Close()
 
 	app := &application{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		artists:  &models.ArtistModel{DB: db},
-		albums:   &models.AlbumModel{DB: db},
-		tracks:   &models.TrackModel{DB: db},
+		errorLog:    errorLog,
+		infoLog:     infoLog,
+		artistModel: &models.ArtistModel{DB: db},
+		albumModel:  &models.AlbumModel{DB: db},
+		trackModel:  &models.TrackModel{DB: db},
 	}
 
 	srv := http.Server{
