@@ -13,8 +13,8 @@
     <pre><code>Genre: {{ .Genre }}</code></pre>
     <pre><code>Duration: {{ .Duration }}</code></pre>
     <div class="metadata">
-        <time>Created: {{ .Created }}</time>
-        <time>Expires: {{ .Expires }}</time>
+        <time>Created: {{humanDate .Created }}</time>
+        <time>Expires: {{humanDate .Expires }}</time>
     </div>
 </div>
 {{ end }} {{ end }}

@@ -16,8 +16,8 @@
         <th>{{ .Genre }}</th>
         <th>#{{ .ArtistId }}</th>
         <th>#{{ .AlbumId }}</th>
-        <th>{{ .Released }}</th>
-        <th>{{ .Created }}</th>
+        <th>{{humanDate .Released }}</th>
+        <th>{{humanDate .Created }}</th>
     </tr>
     {{ end }}
 </table>

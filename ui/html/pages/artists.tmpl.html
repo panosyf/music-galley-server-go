@@ -14,8 +14,8 @@
         <td><a href="artist/view?id={{.ArtistId}}">{{ .Name }}</a></td>
         <th>{{ .Genre }}</th>
         <th>#{{ .ArtistId }}</th>
-        <th>{{ .Formation }}</th>
-        <th>{{ .Created }}</th>
+        <th>{{humanDate .Formation }}</th>
+        <th>{{humanDate .Created }}</th>
     </tr>
     {{ end }}
 </table>

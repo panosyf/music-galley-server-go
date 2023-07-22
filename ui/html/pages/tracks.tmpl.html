@@ -23,7 +23,7 @@
         {{ end }}
         <th>#{{ .TrackId }}</th>
         <th>{{ .Duration }}</th>
-        <th>{{ .Created }}</th>
+        <th>{{humanDate .Created }}</th>
     </tr>
     {{ end }}
 </table>
