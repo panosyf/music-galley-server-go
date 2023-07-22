@@ -1,9 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"runtime/debug"
 	"strconv"
@@ -42,20 +42,6 @@ func (app *application) CheckId(w http.ResponseWriter, r *http.Request) (int, er
 	return id, nil
 }
 
-func (app *application) CheckParsedFile(w http.ResponseWriter, files []string) error {
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return err
-	}
-	err = ts.ExecuteTemplate(w, "base", nil)
-	if err != nil {
-		app.serverError(w, err)
-		return err
-	}
-	return nil
-}
-
 func (app *application) render(w http.ResponseWriter, status int, page string, data *templateData) {
 	ts, ok := app.templateCache[page]
 	if !ok {
@@ -64,10 +50,15 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 		return
 	}
 
-	w.WriteHeader(status)
+	buf := new(bytes.Buffer)
 
-	err := ts.ExecuteTemplate(w, "base", data)
+	err := ts.ExecuteTemplate(buf, "base", data)
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
+
+	w.WriteHeader(status)
+
+	buf.WriteTo(w)
 }

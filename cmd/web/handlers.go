@@ -14,7 +14,9 @@ func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, http.StatusOK, "homepage.tmpl.html", nil)
+	data := app.newTemplateData(r)
+
+	app.render(w, http.StatusOK, "homepage.tmpl.html", data)
 }
 
 func (app *application) artists(w http.ResponseWriter, r *http.Request) {
@@ -24,9 +26,10 @@ func (app *application) artists(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, http.StatusOK, "artists.tmpl.html", &templateData{
-		Artists: artists,
-	})
+	data := app.newTemplateData(r)
+	data.Artists = artists
+
+	app.render(w, http.StatusOK, "artists.tmpl.html", data)
 }
 
 func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
@@ -46,9 +49,10 @@ func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, http.StatusOK, "artistView.tmpl.html", &templateData{
-		Artist: artist,
-	})
+	data := app.newTemplateData(r)
+	data.Artist = artist
+
+	app.render(w, http.StatusOK, "artistView.tmpl.html", data)
 }
 
 func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
@@ -76,8 +80,10 @@ func (app *application) albums(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, http.StatusOK, "albums.tmpl.html", &templateData{
-		Albums: albums})
+	data := app.newTemplateData(r)
+	data.Albums = albums
+
+	app.render(w, http.StatusOK, "albums.tmpl.html", data)
 }
 
 func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
@@ -97,8 +103,10 @@ func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, http.StatusOK, "albumView.tmpl.html", &templateData{
-		Album: album})
+	data := app.newTemplateData(r)
+	data.Album = album
+
+	app.render(w, http.StatusOK, "albumView.tmpl.html", data)
 }
 
 func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
@@ -127,9 +135,10 @@ func (app *application) tracks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, http.StatusOK, "tracks.tmpl.html", &templateData{
-		Tracks: tracks,
-	})
+	data := app.newTemplateData(r)
+	data.Tracks = tracks
+
+	app.render(w, http.StatusOK, "tracks.tmpl.html", data)
 }
 
 func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
@@ -149,9 +158,10 @@ func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	app.render(w, http.StatusOK, "trackView.tmpl.html", &templateData{
-		Track: track,
-	})
+	data := app.newTemplateData(r)
+	data.Track = track
+
+	app.render(w, http.StatusOK, "trackView.tmpl.html", data)
 }
 
 func (app *application) trackCreate(w http.ResponseWriter, r *http.Request) {
