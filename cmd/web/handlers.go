@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"text/template"
 
 	"github.com/panosyf/music-gallery-server-go/internal/models"
 )
@@ -15,15 +14,7 @@ func (app *application) homepage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/pages/homepage.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html"}
-
-	if app.CheckParsedFile(w, files) != nil {
-		return
-	}
-	w.Write([]byte("homepage"))
+	app.render(w, http.StatusOK, "homepage.tmpl.html", nil)
 }
 
 func (app *application) artists(w http.ResponseWriter, r *http.Request) {
@@ -33,26 +24,9 @@ func (app *application) artists(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/pages/artists.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	artistsData := &artistTemplateData{
+	app.render(w, http.StatusOK, "artists.tmpl.html", &templateData{
 		Artists: artists,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", artistsData)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	})
 }
 
 func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
@@ -72,27 +46,9 @@ func (app *application) artistView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html",
-		"./ui/html/pages/artistView.tmpl.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	artistData := &artistTemplateData{
+	app.render(w, http.StatusOK, "artistView.tmpl.html", &templateData{
 		Artist: artist,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", artistData)
-	if err != nil {
-		app.serverError(w, err)
-	}
-	fmt.Fprintf(w, "%+v", artist)
+	})
 }
 
 func (app *application) artistCreate(w http.ResponseWriter, r *http.Request) {
@@ -120,26 +76,8 @@ func (app *application) albums(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/pages/albums.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	albumsData := &albumTemplateData{
-		Albums: albums,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", albumsData)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	app.render(w, http.StatusOK, "albums.tmpl.html", &templateData{
+		Albums: albums})
 }
 
 func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
@@ -156,29 +94,11 @@ func (app *application) albumView(w http.ResponseWriter, r *http.Request) {
 		} else {
 			app.serverError(w, err)
 		}
-	}
-
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html",
-		"./ui/html/pages/albumView.tmpl.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
 		return
 	}
 
-	albumData := &albumTemplateData{
-		Album: album,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", albumData)
-	if err != nil {
-		app.serverError(w, err)
-	}
-	fmt.Fprintf(w, "%+v\n", album)
+	app.render(w, http.StatusOK, "albumView.tmpl.html", &templateData{
+		Album: album})
 }
 
 func (app *application) albumCreate(w http.ResponseWriter, r *http.Request) {
@@ -207,26 +127,9 @@ func (app *application) tracks(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/pages/tracks.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	tracksData := &trackTemplateData{
+	app.render(w, http.StatusOK, "tracks.tmpl.html", &templateData{
 		Tracks: tracks,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", tracksData)
-	if err != nil {
-		app.serverError(w, err)
-	}
+	})
 }
 
 func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
@@ -246,27 +149,9 @@ func (app *application) trackView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/base.tmpl.html",
-		"./ui/html/partials/nav.tmpl.html",
-		"./ui/html/pages/trackView.tmpl.html",
-	}
-
-	ts, err := template.ParseFiles(files...)
-	if err != nil {
-		app.serverError(w, err)
-		return
-	}
-
-	trackData := &trackTemplateData{
+	app.render(w, http.StatusOK, "trackView.tmpl.html", &templateData{
 		Track: track,
-	}
-
-	err = ts.ExecuteTemplate(w, "base", trackData)
-	if err != nil {
-		app.serverError(w, err)
-	}
-	fmt.Fprintf(w, "%+v\n", track)
+	})
 }
 
 func (app *application) trackCreate(w http.ResponseWriter, r *http.Request) {

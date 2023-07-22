@@ -3,9 +3,13 @@
 <div class="entry">
     <div class="metadata">
         <strong>{{ .Title }}</strong>
-        <span>{{ .ArtistId }}</span>
-        <span>{{ .AlbumId }}</span>
+        <span>ArtistID: {{ .ArtistId }}</span>
     </div>
+    {{ if .AlbumId.Valid }}
+    <pre><code>AlbumID: {{ .AlbumId.String }}</code></pre>
+    {{ else }}
+    <pre><code>AlbumID: Single</code></pre>
+    {{ end }}
     <pre><code>Genre: {{ .Genre }}</code></pre>
     <pre><code>Duration: {{ .Duration }}</code></pre>
     <div class="metadata">

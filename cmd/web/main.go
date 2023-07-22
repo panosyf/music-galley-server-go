@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -12,11 +13,12 @@ import (
 )
 
 type application struct {
-	errorLog    *log.Logger
-	infoLog     *log.Logger
-	artistModel *models.ArtistModel
-	albumModel  *models.AlbumModel
-	trackModel  *models.TrackModel
+	errorLog      *log.Logger
+	infoLog       *log.Logger
+	artistModel   *models.ArtistModel
+	albumModel    *models.AlbumModel
+	trackModel    *models.TrackModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -34,12 +36,18 @@ func main() {
 
 	defer db.Close()
 
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		errorLog.Fatal(err)
+	}
+
 	app := &application{
-		errorLog:    errorLog,
-		infoLog:     infoLog,
-		artistModel: &models.ArtistModel{DB: db},
-		albumModel:  &models.AlbumModel{DB: db},
-		trackModel:  &models.TrackModel{DB: db},
+		errorLog:      errorLog,
+		infoLog:       infoLog,
+		artistModel:   &models.ArtistModel{DB: db},
+		albumModel:    &models.AlbumModel{DB: db},
+		trackModel:    &models.TrackModel{DB: db},
+		templateCache: templateCache,
 	}
 
 	srv := http.Server{

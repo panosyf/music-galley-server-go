@@ -40,7 +40,7 @@ func (m *TrackModel) Insert(artistId int, albumId int, title string, genre strin
 
 func (m *TrackModel) Get(trackId int) (*Track, error) {
 	stmt := `SELECT track_id, artist_id, album_id, title, genre, duration, created, expires FROM tracks
-	WHERE expires > UTC_TIMESTAMP() AND artist_id = ?`
+	WHERE expires > UTC_TIMESTAMP() AND track_id = ?`
 
 	row := m.DB.QueryRow(stmt, trackId)
 
