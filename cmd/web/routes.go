@@ -2,6 +2,8 @@ package main
 
 import (
 	"net/http"
+
+	"github.com/justinas/alice"
 )
 
 func (app *application) routes() http.Handler {
@@ -25,7 +27,9 @@ func (app *application) routes() http.Handler {
 	mux.HandleFunc("/track/view", app.trackView)
 	mux.HandleFunc("/track/create", app.trackCreate)
 
-	return app.recoverPanic(app.logRequest(secureHeaders(mux)))
+	standard := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
+
+	return standard.Then(mux)
 }
 
 // type neuteredFileSystem struct {
